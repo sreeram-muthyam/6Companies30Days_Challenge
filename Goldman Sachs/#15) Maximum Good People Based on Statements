@@ -1,0 +1,47 @@
+https://leetcode.com/problems/maximum-good-people-based-on-statements/description/
+
+class Solution {
+public:
+    int maximumGood(vector<vector<int>>& grid) {
+        int res=0;
+        int n = grid.size();
+        int p = pow(2,n);
+        vector<vector<int>> bag(p,vector<int>(n));
+        for(int i=0; i<p; i++)
+        {
+            vector<int> temp(n);
+            for(int k=0; k<n; k++)
+            {
+                if(i&(1<<k)) temp[k]=1;
+                else temp[k]=0;
+            }
+            bag[i]=temp;
+        }
+        for(int i=0; i<p; i++)
+        {
+            int ans=0;
+            int j=0;
+            for(; j<n; j++)
+            {
+                if(bag[i][j]==1)
+                {
+                    ans++;
+                    bool check = false;
+                    for(int k=0; k<n; k++)
+                    {
+                        int actual = grid[j][k];
+                        int expected = bag[i][k];
+                        if((expected==0 && actual==1) || (expected==1 && actual==0))
+                        {
+                           check = true;
+                            break;
+                        }
+                    }
+                    if(check) break;
+                }
+            }
+            if(j==n) res=max(res,ans);
+        }
+        return res;
+    }
+};
